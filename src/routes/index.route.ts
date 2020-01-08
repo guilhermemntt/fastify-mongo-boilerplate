@@ -1,4 +1,4 @@
-import fastify = require("fastify");
+import fastify from "fastify";
 import { userRoutes } from "./user.route";
 
 type Routes = fastify.RouteOptions[];
