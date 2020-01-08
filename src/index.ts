@@ -6,7 +6,7 @@ import { userController } from "./controllers/user.controller";
 
 dotenv.config({ path: "../.env" });
 
-const services: Service[] = [mongoService];
+const services: Service[] = [mongoService, fastifyService];
 
 (async () => {
   try {

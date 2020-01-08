@@ -19,8 +19,6 @@ let userController: userController = {
         .users.find()
         .toArray();
 
-      return users;
-
       reply.status(200).send(users);
     } catch (error) {
       console.log(error);
@@ -46,6 +44,7 @@ let userController: userController = {
       const user = await mongoService
         .getCollections()
         .users.insertOne(request.body);
+
       reply.status(200).send(user);
     } catch (error) {
       console.log(error);
@@ -54,7 +53,7 @@ let userController: userController = {
   },
   update: async (request, reply) => {
     try {
-      const { _id } = request.body._id;
+      const { _id } = request.body;
 
       const user = await mongoService.getCollections().users.updateOne(
         { _id: new ObjectID(_id) },
@@ -71,7 +70,7 @@ let userController: userController = {
   },
   delete: async (request, reply) => {
     try {
-      const { _id } = request.params._id;
+      const { _id } = request.params;
 
       const user = await mongoService
         .getCollections()
