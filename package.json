@@ -1,0 +1,26 @@
+{
+  "name": "fastify-mongo-boilerplate",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/guilhermemntt/fastify-mongo-boilerplate.git",
+  "author": "guilhermemntt <guilherme.mnetto@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "@types/mongodb": "^3.3.14",
+    "@types/redis": "^2.8.14",
+    "aws-sdk": "^2.599.0",
+    "bson": "^4.0.2",
+    "dotenv": "^8.2.0",
+    "fastify": "^2.11.0",
+    "fastify-cors": "^3.0.1",
+    "fastify-jwt": "^1.2.1",
+    "fastify-multer": "^1.5.2",
+    "firebase-admin": "^8.9.0",
+    "mongodb": "^3.4.1",
+    "mysql": "^2.17.1",
+    "nodemailer": "^6.4.2",
+    "redis": "^2.8.0",
+    "typeorm": "^0.2.22",
+    "uuid": "^3.3.3"
+  }
+}
