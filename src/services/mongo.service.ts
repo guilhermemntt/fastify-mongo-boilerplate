@@ -1,6 +1,11 @@
 import { MongoClient, Db } from "mongodb";
 import { Service } from "./index.service";
-import { User, Collections, Address } from "../types/index.type";
+import {
+  User,
+  Collections,
+  Address,
+  getTypesCollections
+} from "../types/index.type";
 
 interface MongoService extends Service {
   getCollections: () => Collections;
@@ -17,10 +22,7 @@ const mongoService: MongoService = {
           throw new Error("MongoDB service initialized with error: " + error);
         const mongoClient = client.db(process.env.MONGO_NAME);
 
-        collections = {
-          users: mongoClient.collection<User>("users"),
-          addresses: mongoClient.collection<Address>("addresses")
-        };
+        collections = getTypesCollections(mongoClient);
       });
       console.log("Mongo DB service initialized");
     } catch (error) {

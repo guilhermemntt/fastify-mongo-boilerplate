@@ -1,4 +1,4 @@
-import { ObjectID, Collection } from "mongodb";
+import { ObjectID, Collection, Db } from "mongodb";
 
 export interface Address {
   complement?: string;
@@ -22,4 +22,11 @@ export interface User {
 export interface Collections {
   addresses: Collection<Address>;
   users: Collection<User>;
+}
+
+export function getTypesCollections(mongoClient: Db): Collections {
+  return {
+    users: mongoClient.collection<User>("users"),
+    addresses: mongoClient.collection<Address>("addresses")
+  };
 }
