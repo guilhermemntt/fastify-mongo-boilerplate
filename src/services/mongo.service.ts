@@ -1,11 +1,6 @@
 import { MongoClient, Db } from "mongodb";
 import { Service } from "./index.service";
-import {
-  User,
-  Collections,
-  Address,
-  getTypesCollections
-} from "../types/index.type";
+import { Collections, getTypesCollections } from "../types/index.type";
 
 interface MongoService extends Service {
   getCollections: () => Collections;
