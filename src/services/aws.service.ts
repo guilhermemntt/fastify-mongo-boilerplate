@@ -8,10 +8,19 @@ import { File } from "fastify-multer/lib/interfaces";
 interface AWSService extends Service {
   uploadFile: (
     file: File & { uuid?: string },
-    extension: string
+    extension: string,
+    bucketPath?: string
   ) => Promise<string>;
-  deleteFile: (fileUUID: string, extension: string) => Promise<void>;
-  deleteFiles: (fileUUIDArray: string[], extension: string) => Promise<void>;
+  deleteFile: (
+    fileUUID: string,
+    extension: string,
+    bucketPath?: string
+  ) => Promise<void>;
+  deleteFiles: (
+    fileUUIDArray: string[],
+    extension: string,
+    bucketPath?: string
+  ) => Promise<void>;
 }
 
 let s3: AWS.S3;
@@ -30,7 +39,7 @@ const awsService: AWSService = {
       throw error;
     }
   },
-  uploadFile: async (file, extension) => {
+  uploadFile: async (file, extension, bucketPath = "") => {
     if (!s3) throw new Error("[AWS] AWS service not initialized yet");
     if (!file.uuid)
       console.log(`[AWS] File ${file.filename} has no uuid, creating uuid`);
@@ -40,7 +49,7 @@ const awsService: AWSService = {
       const _file = fs.readFileSync(`${root}/${file.path}`);
       const params = {
         Bucket: process.env.AWS_BUCKET,
-        Key: `${_uuid}.${extension}`,
+        Key: `${bucketPath}${_uuid}.${extension}`,
         Body: _file,
         ACL: "public-read",
         ContentType: file.mimetype || "application/octet-stream"
@@ -76,13 +85,13 @@ const awsService: AWSService = {
       throw error;
     }
   },
-  deleteFile: (fileUUID, extension) => {
+  deleteFile: (fileUUID, extension, bucketPath = "") => {
     try {
       if (!s3) throw new Error("[AWS] AWS service not initialized yet");
       return new Promise((resolve, reject) => {
         s3.deleteObject(
           {
-            Key: `${fileUUID}.${extension}`,
+            Key: `${bucketPath}${fileUUID}.${extension}`,
             Bucket: process.env.AWS_BUCKET as string
           },
           (s3Err: Error, data: AWS.S3.DeleteObjectOutput) => {
@@ -99,11 +108,13 @@ const awsService: AWSService = {
       throw error;
     }
   },
-  deleteFiles: async (fileUUIDArray, extension) => {
+  deleteFiles: async (fileUUIDArray, extension, bucketPath = "") => {
     try {
       if (!s3) throw new Error("[AWS] AWS service not initialized yet");
       await Promise.all(
-        fileUUIDArray.map(fileUUID => this.deleteFile(fileUUID))
+        fileUUIDArray.map(fileUUID =>
+          this.deleteFile(fileUUID, extension, bucketPath)
+        )
       );
       console.log("[AWS] All files deleted succefully.");
     } catch (error) {
