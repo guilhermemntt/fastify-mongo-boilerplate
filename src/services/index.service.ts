@@ -1,3 +1,3 @@
 export interface Service {
-  init: () => void;
+  init: () => Promise<void>;
 }

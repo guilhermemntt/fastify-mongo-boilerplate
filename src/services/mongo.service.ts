@@ -13,23 +13,23 @@ const mongoService: MongoService = {
     try {
       const url = `mongodb://${process.env.MONGO_HOST}:${process.env.MONGO_PORT}`;
       MongoClient.connect(url, (error, client) => {
-        if (error)
-          throw new Error("MongoDB service initialized with error: " + error);
+        if (error) throw error;
         const mongoClient = client.db(process.env.MONGO_NAME);
-
         collections = getTypesCollections(mongoClient);
       });
-      console.log("Mongo DB service initialized");
+      console.log("[MONGODB] MongoDB service initialized");
     } catch (error) {
+      console.log("[MONGODB] Error during MongoDB service initialization");
       throw error;
     }
   },
   getCollections: () => {
     try {
-      if (!collections) throw new Error("MongoDB service not initialized");
+      if (!collections)
+        throw new Error("[MONGODB] MongoDB service not initialized yet");
       return collections;
     } catch (error) {
-      console.log(error);
+      console.log(`[MONGODB] Error returning MongoDB collections`);
       throw error;
     }
   }

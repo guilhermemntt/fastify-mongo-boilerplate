@@ -1,12 +1,15 @@
 import nodemailer, { Transporter } from "nodemailer";
 import { Service } from "./index.service";
+import fs from "fs";
 
 interface EmailerService extends Service {
   sendMail: (
     subject: string,
-    text: { title: string; body: string },
-    toEmail: string
-  ) => void;
+    to: string,
+    text?: string,
+    htmlFilePath?: string,
+    from?: string
+  ) => Promise<void>;
 }
 
 let transporter: Transporter;
@@ -22,27 +25,38 @@ const emailerService: EmailerService = {
         }
       } as any);
 
-      console.log("Emailer service initialized.");
+      console.log("[EMAILER] Emailer service initialized.");
     } catch (error) {
+      console.log("[EMAILER] Error during emailer service initialization");
       throw error;
     }
   },
-  sendMail: async (subject, text = { title: "", body: "" }, toEmail = "") => {
-    if (!transporter) throw new Error("Emailer service not initialized yet.");
-    const mailOptions = {
-      from: process.env.EMAIL_ADDRESS,
-      to: toEmail,
-      subject: subject
-      //    html: htmlEmailGenerator.generate(text.title, text.body)
-    };
+  sendMail: async (subject, to, text, htmlFilePath, from) => {
+    try {
+      if (!transporter)
+        throw new Error("[EMAILER] Emailer service not initialized yet.");
+      const mailOptions = {
+        from: from || process.env.EMAIL_ADDRESS,
+        to,
+        subject,
+        text,
+        html: fs.readFileSync(htmlFilePath)
+      };
 
-    transporter.sendMail(mailOptions, (error, info) => {
-      if (error) {
-        console.log(error);
-      } else {
-        console.log("Email sent: " + info.response);
-      }
-    });
+      return await new Promise((resolve, reject) => {
+        transporter.sendMail(mailOptions, (error, info) => {
+          if (!error) {
+            console.log(`[EMAILER] Email sent to ${to}: ${info.response}`);
+            resolve();
+          } else {
+            reject(error);
+          }
+        });
+      });
+    } catch (error) {
+      console.log(`[EMAILER] Error sending email to ${to}`);
+      throw error;
+    }
   }
 };
 
