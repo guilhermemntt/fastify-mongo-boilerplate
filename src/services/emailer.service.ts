@@ -40,7 +40,7 @@ const emailerService: EmailerService = {
         to,
         subject,
         text,
-        html: fs.readFileSync(htmlFilePath)
+        html: htmlFilePath && fs.readFileSync(htmlFilePath)
       };
 
       return await new Promise((resolve, reject) => {

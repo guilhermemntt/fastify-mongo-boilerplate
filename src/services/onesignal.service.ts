@@ -5,7 +5,7 @@ interface OneSignalService extends Service {
   sendNotification: (
     userId: number | string,
     notif: { title: string; body: string }
-  ) => any;
+  ) => Promise<any>;
 }
 
 let locked = true;
