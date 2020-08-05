@@ -13,7 +13,7 @@
     "aws-sdk": "^2.599.0",
     "bson": "^4.0.2",
     "dotenv": "^8.2.0",
-    "fastify": "^2.11.0",
+    "fastify": "^2.15.1",
     "fastify-cors": "^3.0.1",
     "fastify-jwt": "^1.2.1",
     "fastify-multer": "^1.5.2",
